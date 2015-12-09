@@ -14,23 +14,33 @@ function createAccount (account) {
 function getAccount (username) {
   var matchedAccount;
 
-  accounts.forEach(function (account) {
-    if (account.username === username) {
-      matchedAccount = account;
+  for (var i = 0; i < accounts.length; i++){
+    if (accounts[i].username === username){
+      matchedAccount = accounts[i];
     }
-  });
+  }
+
   return matchedAccount;
 }
 
 //deposit
 function deposit (account, amount) {
-  account.balance += amount;
+  if (typeof amount === 'number') {
+    account.balance += amount;
+  } else {
+    console.log('Deposit failed. Please enter a number');
+  }
+
 }
 
 
 //withdraw
 function withdraw (account, amount) {
-  account.balance -= amount;
+  if (typeof amount === 'number') {
+    account.balance -= amount;
+  } else {
+    console.log('Withdraw failed. Please enter a number');
+  }
 }
 
 
@@ -39,27 +49,27 @@ function getBalance (account) {
   return account.balance;
 }
 
+function createBalanceGetter (account){
+  return function() {
+    return account.balance
+  }
+}
+
 
 var mattsAccount = createAccount({
   username: 'matt',
   balance: 0
 });
 
-deposit(mattsAccount, 100);
-console.log(getBalance(mattsAccount));
+var matt = createAccount({
+  username: 'Matt',
+  balance: 0
+});
 
-withdraw(mattsAccount, 11);
-console.log(getBalance(mattsAccount));
+deposit(matt, 120);
+withdraw(matt, "not a num");
 
-var existingAccount = getAccount('matt');
-console.log(getBalance(mattsAccount));
+var matt2 = getAccount('Matt')
+var getMatt2Balance = createBalanceGetter(matt2);
 
-var lizAccount = createAccount({
-  username: 'liz',
-  balance: 12
-})
-
-console.log(accounts)
-
-var existingLizAccount = getAccount('liz');
-console.log(existingLizAccount);
+console.log(getMatt2Balance());
